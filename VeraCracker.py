@@ -34,10 +34,11 @@ if __name__ == '__main__':
   description='''VeraCrypt volume cracker'''
 
   parser = argparse.ArgumentParser(description=description)
-  parser.add_argument('-v', metavar='volume',     type=str, help='Path to volume')
-  parser.add_argument('-p', metavar='list',       type=str, help='Password list', nargs="?")
-  parser.add_argument('-m', metavar='mountpoint', type=str, help='Mountpoint for the volume to be mounted')
-  parser.add_argument('-d', action='store_true',            help='Debug mode')
+  parser.add_argument('-v', metavar='volume',     type=str, required=True, help='Path to volume')
+  parser.add_argument('-p', metavar='list',       type=str, nargs="?",     help='Password list')
+  parser.add_argument('-m', metavar='mountpoint', type=str, required=True, help='Mountpoint for the volume to be mounted')
+  parser.add_argument('-d', action='store_true',                           help='Debug mode')
+  parser.add_argument('-o', metavar='file',       type=str,                help='Output file for untried passwords on quit')
   args = parser.parse_args()
 
   # Check script requirements
@@ -52,24 +53,32 @@ if __name__ == '__main__':
   wordlist=[x.strip() for x in open(args.p, 'r')] if args.p else [line.strip() for line in fileinput.input()]
   
   # Time to test
+  wlCopy = list(wordlist)
   tried=0
   startTime=datetime.now()
-  for p in wordlist:
-    tried+=1
-    if args.d:
-      print("[-]Trying %s"%p)
-    os.popen(VeraPath + veraCMD%(args.v, p, args.m))
-    while True:
-      if isVeraRunning():
-        time.sleep(0.1)
-      else:
-	      break
-    try:
-      os.chdir("%s:"%args.m)
-      print("[+]Password found! --> %s <--"%p)
-      printResults(startTime, tried)
-      sys.exit(0)
-    except:
-      pass
-  print("Password not found")
-  printResults(startTime, tried)
+  try:
+    for p in wordlist:
+      wlCopy.pop()
+      tried+=1
+      if args.d:
+        print("[-]Trying %s"%p)
+        print(VeraPath + veraCMD%(args.v, p, args.m))
+      os.popen(VeraPath + veraCMD%(args.v, p, args.m))
+      while True:
+        if isVeraRunning():
+          time.sleep(0.1)
+        else:
+	        break
+      try:
+        os.chdir("%s:"%args.m)
+        print("[+]Password found! --> %s <--"%p)
+        printResults(startTime, tried)
+        sys.exit(0)
+      except:
+        pass
+    print("Password not found")
+    printResults(startTime, tried)
+  except KeyboardInterrupt:
+    if args.o:
+      f=open(args.o,'w')
+      f.write("\n".join(wlCopy))
