@@ -25,7 +25,7 @@ if platform.system() != "Windows":
 
 # Set variables based on platform
 if platform.system() == "Windows":
-  veraCMD = "VeraCrypt.exe /v %s /q /p %s /s /l %s"  
+  veraCMD = 'VeraCrypt.exe /v "%s" /q /p "%s" /s /l %s'
   processCMD = "query process"
   veraProcessName = "veracrypt.exe"
 else:
@@ -67,11 +67,10 @@ if __name__ == '__main__':
   startTime=datetime.now()
   try:
     for p in wordlist:
-      wlCopy.pop()
+      wlCopy.pop(0)
       tried+=1
       if args.d:
-        print("[-]Trying %s"%p)
-        print(VeraPath + veraCMD%(args.v, p, args.m))
+        print("[-] Trying %s"%p)
       os.popen(VeraPath + veraCMD%(args.v, p, args.m))
       while True:
         if isVeraRunning():
@@ -80,7 +79,7 @@ if __name__ == '__main__':
 	        break
       try:
         os.chdir("%s:"%args.m)
-        print("[+]Password found! --> %s <--"%p)
+        print("[+] Password found! --> %s <--"%p)
         printResults(startTime, tried)
         sys.exit(0)
       except:
@@ -88,6 +87,9 @@ if __name__ == '__main__':
     print("Password not found")
     printResults(startTime, tried)
   except KeyboardInterrupt:
+    print("[!]Cracker interrupted")
     if args.o:
+      if args.d:
+        print("[-] Saving leftover passwords to %s"%args.o)
       f=open(args.o,'w')
       f.write("\n".join(wlCopy))
