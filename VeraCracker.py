@@ -1,3 +1,12 @@
+#!/usr/bin/env python3.3
+# -*- coding: utf8 -*-
+#
+# VeraCrypt volume password cracker
+
+# Copyright (c) 2015	NorthernSec
+# Copyright (c) 2015	Pieter-Jan Moreels
+# This software is licensed under the Original BSD License
+
 # Imports
 import argparse
 import os
