@@ -10,7 +10,7 @@ This script will go through a list of passwords and try these against the specif
 This tool is for educational purposes only and is not intended to be put into practise unless you have authorised access
  to the system you are trying to break into
  
- ## License
+##License
 This software is licensed under the "Original BSD License".
 ```
   (C) 2015  NorthernSec          https://github.com/NorthernSec
