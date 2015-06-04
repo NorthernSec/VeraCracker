@@ -3,7 +3,7 @@ Veracrypt Password Cracker <br />
 This script will go through a list of passwords and try these against the specified volume. If succeeded, it will mount
  the partition. 
 
-**Note:** This project is currently only working under **Python 3.x** on **Windows** systems. <br />
+**Note:** This project is currently only working under **Python 3.x** on **Windows** and Linux systems. <br />
 **Note:** **No dependencies** are needed, but **VeraCrypt has to be installed**
 
 ##Disclaimer
