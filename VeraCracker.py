@@ -21,7 +21,7 @@ VeraWinPath = '"c:\\Program Files\\VeraCrypt\\"'
 VeraWinCMD = 'VeraCrypt.exe /v "%s" /q /p "%s" /s /l %s'
 VeraWinProcList = "query process"
 VeraWinProcName = "veracrypt.exe"
-VeraLinuxCMD = 'veracrypt %s -p %s --non-interactive'
+VeraLinuxCMD = 'veracrypt -t %s -p %s --non-interactive'
 
 # Functions
 def isVeraRunning():
@@ -75,13 +75,13 @@ def linuxCrack(p):
   cmd=VeraLinuxCMD%(args.v, "thisisnotthecorrectpassword")
   process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   out, err = process.communicate()
-  err_message = str(out, "utf-8").strip() if out else str(err, "utf-8").strip()
+  err_message = str(out).strip() if out else str(err).strip()
   
   cmd=VeraLinuxCMD%(args.v, p)
   process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   out, err = process.communicate()
   
-  procreturn = str(out, "utf-8").strip() if out else str(err, "utf-8").strip()
+  procreturn = str(out).strip() if out else str(err).strip()
   if procreturn == err_message:
     return False
   elif procreturn == "Error: Failed to obtain administrator privileges.":
