@@ -1,3 +1,5 @@
+> **Warning:** This repository is not maintained anymore
+
 # VeraCracker
 Veracrypt Password Cracker <br />
 This script will go through a list of passwords and try these against the specified volume. If succeeded, it will mount the partition. 
