@@ -13,6 +13,7 @@ import os
 import platform
 import subprocess
 import sys
+import codecs
 import time
 from datetime import datetime
 
@@ -144,7 +145,7 @@ if __name__ == '__main__':
     checkRequirements()
 
     # Get wordlist
-    wordlist = [x.strip() for x in open(args.p, 'r')] if args.p else [
+    wordlist = [x.strip() for x in codecs.open(args.p, 'r', 'utf-8')] if args.p else [
         line.strip() for line in fileinput.input()]
 
     # Time to test
