@@ -61,8 +61,8 @@ def checkRequirements():
             pass
 
 
-def windowsCrack(p, veracryptPath):
-    os.popen(veracryptPath + VeraWinAttributes % (args.v, p, args.m))
+def windowsCrack(p, veracryptPath, keyFile):
+    os.popen(veracryptPath + VeraWinAttributes % (args.v, p, args.m, keyFile))
     while True:
         if isVeraRunning():
             time.sleep(0.1)
