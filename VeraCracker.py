@@ -23,7 +23,7 @@ VeraWinProcList = "query process"
 VeraWinProcName = "veracrypt.exe"
 VeraMacPath = '/Applications/VeraCrypt.app/Contents/MacOS/VeraCrypt'
 VeraLinuxPath = 'veracrypt'
-VeraLinuxAttributes = ' -t %s -p %s --non-interactive'
+VeraLinuxAttributes = ' -t %s -p "%s" %s --non-interactive'
 
 # Functions
 
@@ -75,8 +75,8 @@ def windowsCrack(p, veracryptPath):
         return False
 
 
-def linuxCrack(p, veracryptPath):
-    cmd = veracryptPath + VeraLinuxAttributes % (args.v, p)
+def linuxCrack(p, veracryptPath, keyFile):
+    cmd = veracryptPath + VeraLinuxAttributes % (args.v, p, keyFile)
     process = subprocess.Popen(
         cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = process.communicate()
@@ -113,6 +113,8 @@ if __name__ == '__main__':
                         required=True, help='Path to volume')
     parser.add_argument('-p', metavar='list', type=str,
                         nargs="?", help='Password list')
+    parser.add_argument('-k', metavar='file', type=str,
+                        help='Path to the key file')
     if platform.system() == "Windows":
         parser.add_argument('-m', metavar='mountpoint', type=str,
                             required=True, help='Mountpoint for the volume to be mounted')
@@ -125,20 +127,28 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Get VeraCypt binary path
+    keyFile = ""
     if platform.system() == "Linux":
         veracryptPath = VeraLinuxPath
+        if args.k:
+            keyFile = '-k "%s"' % args.k
         crack = linuxCrack
     elif platform.system() == "Windows":
         veracryptPath = VeraWinPath
+        if args.k:
+            keyFile = '/k "%s"' % args.k
         crack = windowsCrack
     elif platform.system() == "Darwin":
         veracryptPath = VeraMacPath
+        if args.k:
+            keyFile = '-k "%s"' % args.k
         crack = linuxCrack
     else:
         sys.exit("This script is not written for your platform")
 
     if args.b:
         veracryptPath = args.b
+
 
     # Check script requirements
     checkRequirements()
@@ -155,7 +165,7 @@ if __name__ == '__main__':
         for p in progressbar(wordlist):
             if args.d:
                 print("[-] Trying %s" % p)
-            if crack(p, veracryptPath):
+            if crack(p, veracryptPath, keyFile):
                 print("[+] Password found! --> %s <--" % p)
                 printResults(startTime, tried)
                 sys.exit(0)
