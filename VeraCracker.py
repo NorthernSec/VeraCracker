@@ -18,7 +18,7 @@ from datetime import datetime
 
 # Constants
 VeraWinPath = '"c:\\Program Files\\VeraCrypt\\VeraCrypt.exe"'
-VeraWinAttributes = ' /v "%s" /q /p "%s" /s /l %s'
+VeraWinAttributes = ' /v "%s" /q /p "%s" %s /s /l %s'
 VeraWinProcList = "query process"
 VeraWinProcName = "veracrypt.exe"
 VeraMacPath = '/Applications/VeraCrypt.app/Contents/MacOS/VeraCrypt'
@@ -62,7 +62,7 @@ def checkRequirements():
 
 
 def windowsCrack(p, veracryptPath, keyFile):
-    os.popen(veracryptPath + VeraWinAttributes % (args.v, p, args.m, keyFile))
+    os.popen(veracryptPath + VeraWinAttributes % (args.v, p, keyFile, args.m))
     while True:
         if isVeraRunning():
             time.sleep(0.1)
